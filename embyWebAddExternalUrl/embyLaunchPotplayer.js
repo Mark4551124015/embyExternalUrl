@@ -13,6 +13,8 @@
 // @github       https://github.com/bpking1/embyExternalUrl
 // @match        *://*/web/index.html
 // @match        *://*/web/
+// @downloadURL https://update.greasyfork.org/scripts/514529/embyLaunchPotplayer.user.js
+// @updateURL https://update.greasyfork.org/scripts/514529/embyLaunchPotplayer.meta.js
 // ==/UserScript==
 
 (function () {
@@ -69,7 +71,8 @@
                 , onClick: embyFigPlayer, osCheck: [OS.isMacOS], },
             { id: "embySenPlayer", title: "SenPlayer", iconId: "icon-SenPlayer"
                 , onClick: embySenPlayer, osCheck: [OS.isIOS], },
-            { id: "embyCopyUrl", title: "复制串流地址", iconId: "icon-Copy", onClick: embyCopyUrl, }
+            { id: "embyCopyUrl", title: "复制串流地址", iconId: "icon-Copy", onClick: embyCopyUrl, },
+            { id: "embyMissAV", title: "MissAV播放", iconId: "icon-Copy", onClick: embyMissAV }
         ];
         function generateButtonHTML({ id, title, iconId }) {
             return `
@@ -289,6 +292,7 @@
             streamUrl: streamUrl,
             subUrl: subUrl,
             intent: intent,
+            fileName: fileName
         }
     }
 
@@ -509,6 +513,13 @@
         // see: app 关于, URL Schemes
         const url = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(mediaInfo.streamUrl)}`;
         console.log(`SenPlayerUrl= ${url}`);
+        window.open(url, "_self");
+    }
+
+    async function embyMissAV() {
+        const mediaInfo = await getEmbyMediaInfo();
+        const url = `https://missav.com/cn/${mediaInfo.fileName}`;
+        console.log(`MissAV= ${url}`);
         window.open(url, "_self");
     }
 
